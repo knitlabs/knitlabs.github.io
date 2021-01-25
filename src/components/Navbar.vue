@@ -1,6 +1,13 @@
 <template>
   <div class="navbar">
-    <h1>Navbar</h1>
+    <ul>
+      <li>HOME</li>
+      <li>ABOUT US</li>
+      <li>BLOGS</li>
+      <li>PROJECTS</li>
+      <li>CONTACT US</li>
+
+    </ul>
   </div>
 </template>
 
