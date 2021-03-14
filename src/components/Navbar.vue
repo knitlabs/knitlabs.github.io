@@ -1,40 +1,40 @@
 <template>
-  <div class="nav-bar">
-    <ul class="nav-list">
-      <li class="nav-item nav-left nav-logo"><a href="#">KNITLABS</a></li>
-      <li v-on:click="toggleNavbar" class="navbar-toggle nav-right">
-        <svg v-show="!isActive" viewBox="0 0 100 80" width="40" height="40">
-          <rect y="20" width="100" height="10"></rect>
-          <rect y="50" width="100" height="10"></rect>
-          <rect y="80" width="100" height="10"></rect>
+  <div class="navbar">
+    <div class="nav-logo">KNITLABS</div>
+    <div class="nav-list">
+      <div class="collapsible-navbar" v-on:click="toggleNavbar">
+        <svg viewBox="0 0 100 60" width="40" height="40" v-show="!isNavbarOpen">
+          <rect y="0" width="80" height="10"></rect>
+          <rect y="30" width="80" height="10"></rect>
+          <rect y="60" width="80" height="10"></rect>
         </svg>
-        <svg v-show="isActive" viewBox="0 0 100 80" height="40" width="40">
+        <svg viewBox="0 0 100 60" height="40" width="40" v-show="isNavbarOpen">
           <line
-            x1="20"
-            y1="20"
-            x2="90"
-            y2="90"
+            x1="0"
+            y1="0"
+            x2="70"
+            y2="70"
             stroke="black"
             stroke-width="10"
           />
           <line
-            x1="90"
-            y1="20"
-            x2="20"
-            y2="90"
+            x1="70"
+            y1="0"
+            x2="0"
+            y2="70"
             stroke="black"
             stroke-width="10"
           />
         </svg>
-      </li>
-    </ul>
-    <ul class="nav-list nav-right text-right" v-show="isActive">
-      <li class="nav-item float-left"><a href="#home">HOME</a></li>
-      <li class="nav-item float-left"><a href="#about">ABOUT US</a></li>
-      <li class="nav-item float-left"><a href="#blogs">BLOGS</a></li>
-      <li class="nav-item float-left"><a href="#projects">PROJECTS</a></li>
-      <li class="nav-item float-left"><a href="#contact">CONTACT US</a></li>
-    </ul>
+      </div>
+      <div class="nav-list-items" v-show="isNavbarOpen">
+        <div class="nav-list-item">HOME</div>
+        <div class="nav-list-item">ABOUT US</div>
+        <div class="nav-list-item">BLOGS</div>
+        <div class="nav-list-item">PROJECTS</div>
+        <div class="nav-list-item">CONTACT US</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -43,8 +43,7 @@ export default {
   name: "Navbar",
   data: function () {
     return {
-      isActive: window.innerWidth > 745,
-      collapsedNavbar: window.innerWidth < 745,
+      isNavbarOpen: window.innerWidth > 745,
     };
   },
   created() {
@@ -55,77 +54,65 @@ export default {
   },
   methods: {
     toggleNavbar: function () {
-      this.isActive = !this.isActive;
+      this.isNavbarOpen = !this.isNavbarOpen;
     },
     checkWidth: function () {
-      this.collapsedNavbar = window.innerWidth < 745;
-      this.collapsedNavbar == false
-        ? (this.isActive = true)
-        : (this.isActive = false);
+      window.innerWidth > 745
+        ? (this.isNavbarOpen = true)
+        : (this.isNavbarOpen = false);
     },
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.nav-bar {
-  position: fixed;
-  width: 97%;
+<style>
+.navbar {
+  padding: 20px 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
-ul {
-  list-style-type: none;
-  margin: 0%;
-  padding: 0%;
-  overflow: hidden;
+
+.nav-logo {
+  font-weight: 800;
 }
-.nav-item,
-.nav-list {
-  display: inline;
-}
-.nav-logo a {
-  font-weight: 900;
-  padding: 15px;
-  font-size: 1.5rem;
-}
-.nav-left,
-.float-left {
-  float: left;
-}
-.nav-right {
-  float: right;
-}
-a {
-  display: block;
-  color: white;
-  text-decoration: none;
-  padding: 20px;
-}
-.navbar-toggle {
-  display: none;
+
+svg {
   filter: invert(1);
 }
-.text-right {
-  text-align: right;
+
+.nav-list,
+.nav-list-items {
+  display: flex;
+  flex-direction: row;
 }
+
+.nav-list-item {
+  padding: 0px 20px;
+}
+
+.collapsible-navbar {
+  display: none;
+}
+
 @media only screen and (max-width: 745px) {
-  .nav-list {
+  .collapsible-navbar {
     display: block;
-    width: 100%;
+    align-self: flex-end;
   }
-  .nav-item {
-    display: block;
+  .navbar {
+    align-items: flex-start;
   }
-  li > a {
-    padding-right: 10px;
+  .nav-list,
+  .nav-list-items {
+    display: flex;
+    flex-direction: column;
   }
-  .navbar-toggle {
-    display: inline-block;
-    padding-right: 10px;
-    cursor: pointer;
-  }
-  .float-left {
-    float: none;
+  .nav-list-item {
+    padding: 10px 10px;
+    align-self: flex-end;
   }
 }
 </style>
