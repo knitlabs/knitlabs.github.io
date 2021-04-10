@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <div class="nav-logo">KNITLABS</div>
+    <div class="nav-logo">&emsp;KNITLABS</div>
     <div class="nav-list">
       <div class="collapsible-navbar" v-on:click="toggleNavbar">
         <svg viewBox="0 0 100 60" width="40" height="40" v-show="!isNavbarOpen">
@@ -28,11 +28,11 @@
         </svg>
       </div>
       <div class="nav-list-items" v-show="isNavbarOpen">
-        <div class="nav-list-item">HOME</div>
-        <div class="nav-list-item">ABOUT US</div>
-        <div class="nav-list-item">BLOGS</div>
-        <div class="nav-list-item">PROJECTS</div>
-        <div class="nav-list-item">CONTACT US</div>
+        <div @click="$store.commit('changePage', 'Home')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'Home')}">HOME</div>
+        <div @click="$store.commit('changePage', 'About')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'About')}">ABOUT US</div>
+        <div @click="$store.commit('changePage', 'Blogs')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'Blogs')}">BLOGS</div>
+        <div @click="$store.commit('changePage', 'Projects')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'Projects')}">PROJECTS</div>
+        <div @click="$store.commit('changePage', 'Contact')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'Contact')}">CONTACT US</div>
       </div>
     </div>
   </div>
@@ -69,6 +69,7 @@ export default {
 .navbar {
   padding: 20px 0px;
   display: flex;
+  flex-grow: 0;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -76,7 +77,9 @@ export default {
 }
 
 .nav-logo {
+  padding-left: 10px;
   font-weight: 800;
+  font-size: larger;
 }
 
 svg {
@@ -91,16 +94,27 @@ svg {
 
 .nav-list-item {
   padding: 0px 20px;
+  cursor: pointer;
+  color: #A0A0A0;
 }
 
 .collapsible-navbar {
   display: none;
 }
 
+.active {
+  font-weight: 600;
+  color: white;
+}
+
 @media only screen and (max-width: 745px) {
+  .nav-logo{
+    padding-top: 10px;
+  }
   .collapsible-navbar {
     display: block;
     align-self: flex-end;
+    cursor: pointer;
   }
   .navbar {
     align-items: flex-start;

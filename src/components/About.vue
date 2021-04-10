@@ -52,5 +52,8 @@ export default {
 <style scoped>
 #about {
   color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 </style>
