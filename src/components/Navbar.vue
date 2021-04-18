@@ -44,25 +44,25 @@ export default {
   data: function () {
     return {
       isNavbarOpen: window.innerWidth > 745,
-    };
+    }
   },
   created() {
-    window.addEventListener("resize", this.checkWidth);
+    window.addEventListener("resize", this.checkWidth)
   },
   destroyed() {
-    window.removeEventListener("resize", this.checkWidth);
+    window.removeEventListener("resize", this.checkWidth)
   },
   methods: {
     toggleNavbar: function () {
-      this.isNavbarOpen = !this.isNavbarOpen;
+      this.isNavbarOpen = !this.isNavbarOpen
     },
     checkWidth: function () {
       window.innerWidth > 745
         ? (this.isNavbarOpen = true)
-        : (this.isNavbarOpen = false);
+        : (this.isNavbarOpen = false)
     },
   },
-};
+}
 </script>
 
 <style>
