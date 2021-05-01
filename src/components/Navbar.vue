@@ -31,7 +31,7 @@
         <div @click="$store.commit('changePage', 'Home')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'Home')}">HOME</div>
         <div @click="$store.commit('changePage', 'About')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'About')}">ABOUT US</div>
         <div @click="$store.commit('changePage', 'Blogs')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'Blogs')}">BLOGS</div>
-        <div @click="$store.commit('changePage', 'Projects')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'Projects')}">PROJECTS</div>
+        <div v-if="0" @click="$store.commit('changePage', 'Projects')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'Projects')}">PROJECTS</div>
         <div @click="$store.commit('changePage', 'Contact')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'Contact')}">CONTACT US</div>
       </div>
     </div>

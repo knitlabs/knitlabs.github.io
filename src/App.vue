@@ -5,7 +5,7 @@
       <Home v-if="this.$store.state.currentPage === 'Home'"/>
       <About v-if="this.$store.state.currentPage === 'About'"/>
       <Blogs v-if="this.$store.state.currentPage === 'Blogs'"/>
-      <Projects v-if="this.$store.state.currentPage === 'Projects'"/>
+      <Projects v-if="0"/>
     </div>
   </div>
 </template>
