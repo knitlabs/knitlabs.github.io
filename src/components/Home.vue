@@ -1,7 +1,10 @@
 <template>
   <div id="home">
-    <div class="center-box">
-      <h1>{{ homeContent }}<span class="input-cursor">|</span></h1>
+    <div class="center-box flex-column">
+      <h2>{{ homeContent }}</h2>
+      <div class="main-title">
+        <h3>{{ mainTitle }}<span class="input-cursor">|</span></h3>
+      </div>
     </div>
   </div>
 </template>
@@ -12,7 +15,31 @@ export default {
   data: function () {
     return {
       homeContent: "Knitting up stories with technology.",
+      mainTitle: " ",
     };
+  },
+  mounted: function () {
+    this.typeSentence("Coming soon...");
+  },
+  methods: {
+    waitForMs: function (ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    },
+    typeSentence: async function (sentence, delay = 200) {
+      const letters = sentence.split("");
+      let i = 0;
+      while (i < letters.length) {
+        await this.waitForMs(delay);
+        this.mainTitle += letters[i];
+        i++;
+        if (i === letters.length) {
+          i = 0;
+          await this.waitForMs(5000);
+          this.mainTitle = "";
+        }
+      }
+      return;
+    },
   },
 };
 </script>
@@ -28,6 +55,20 @@ export default {
 .footer {
   display: flex;
   align-self: flex-end;
+}
+.flex-column {
+  flex-direction: column;
+}
+.center-box h2 {
+  text-align: center;
+  font-weight: 300;
+  font-size: 75px;
+  margin: 0%;
+}
+.center-box h3 {
+  text-align: center;
+  font-weight: 300;
+  margin: 0%;
 }
 @media only screen and (max-width: 745px) {
 }

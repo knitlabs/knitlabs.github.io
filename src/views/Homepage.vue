@@ -3,10 +3,10 @@
     <Navbar />
     <div class="content">
       <Home v-if="this.$store.state.currentPage === 'Home'" />
-      <About v-if="this.$store.state.currentPage === 'About'" />
-      <Blogs v-if="this.$store.state.currentPage === 'Blogs'" />
-      <Projects v-if="this.$store.state.currentPage === 'Projects'" />
-      <Contact v-if="this.$store.state.currentPage === 'Contact'" />
+      <About v-if="0 && this.$store.state.currentPage === 'About'" />
+      <Blogs v-if="0 && this.$store.state.currentPage === 'Blogs'" />
+      <Projects v-if="0 && this.$store.state.currentPage === 'Projects'" />
+      <Contact v-if="0 && this.$store.state.currentPage === 'Contact'" />
     </div>
   </div>
 </template>

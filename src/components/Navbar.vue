@@ -27,7 +27,7 @@
           />
         </svg>
       </div>
-      <div class="nav-list-items" v-show="isNavbarOpen">
+      <div v-if="0" class="nav-list-items" v-show="isNavbarOpen">
         <div @click="$store.commit('changePage', 'Home')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'Home')}">HOME</div>
         <div @click="$store.commit('changePage', 'About')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'About')}">ABOUT US</div>
         <div @click="$store.commit('changePage', 'Blogs')" v-bind:class="{'nav-list-item': true, 'active': (this.$store.state.currentPage === 'Blogs')}">BLOGS</div>
