@@ -15,10 +15,11 @@ body {
     justify-content: center;
 }
 
-.center-box h1 {
+.center-box h2 {
     text-align: center;
     font-weight: 300;
-    font-size: 100px;
+    font-size: 90px;
+    margin: 0%;
 }
 
 .coming-soon {
@@ -58,8 +59,8 @@ div {
 }
 
 @media only screen and (max-width: 745px) {
-    .center-box h1 {
-        font-size: 50px;
+    .center-box h2 {
+        font-size: 30px;
     }
     .coming-soon {
         font-size: 30px;
