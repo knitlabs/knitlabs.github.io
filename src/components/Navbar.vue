@@ -2,7 +2,7 @@
   <div class="navbar">
     <div class="nav-logo">&emsp;KNITLABS</div>
     <div class="nav-list">
-      <div class="collapsible-navbar" v-on:click="toggleNavbar">
+      <div v-if="0" class="collapsible-navbar" v-on:click="toggleNavbar">
         <svg viewBox="0 0 100 60" width="40" height="40" v-show="!isNavbarOpen">
           <rect y="0" width="80" height="10"></rect>
           <rect y="30" width="80" height="10"></rect>
@@ -67,7 +67,7 @@ export default {
 
 <style>
 .navbar {
-  padding: 20px 0px;
+  padding: 10px 0px;
   display: flex;
   flex-grow: 0;
   flex-direction: row;

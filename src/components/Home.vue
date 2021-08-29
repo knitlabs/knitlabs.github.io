@@ -19,7 +19,7 @@ export default {
     };
   },
   mounted: function () {
-    this.typeSentence("Coming soon...");
+    this.typeSentence("COMING SOON...");
   },
   methods: {
     waitForMs: function (ms) {
@@ -34,7 +34,7 @@ export default {
         i++;
         if (i === letters.length) {
           i = 0;
-          await this.waitForMs(5000);
+          await this.waitForMs(4000);
           this.mainTitle = "";
         }
       }
@@ -59,16 +59,9 @@ export default {
 .flex-column {
   flex-direction: column;
 }
-.center-box h2 {
-  text-align: center;
-  font-weight: 300;
-  font-size: 75px;
-  margin: 0%;
-}
 .center-box h3 {
   text-align: center;
   font-weight: 300;
-  margin: 0%;
 }
 @media only screen and (max-width: 745px) {
 }
