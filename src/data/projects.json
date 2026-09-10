@@ -1,58 +1,44 @@
 [
   {
-    "id": "pixelthread-crm",
-    "title": "PixelThread CRM",
-    "tagline": "Algorithmic client relationship weaving with real-time reactive sync and adaptive pipeline intelligence.",
-    "status": "Live",
-    "tags": ["Vue 3", "Tailwind CSS", "Reactive Sync", "Pinia"],
+    "id": "threadflow",
+    "title": "Threadflow",
+    "tagline": "A calm, interconnected workspace designed to weave daily notes, tasks, and ideas into coherent narratives without friction.",
+    "status": "Coming Soon",
+    "tags": ["Productivity", "Knowledge Base", "Local-First", "Thought Partner"],
     "links": {
-      "live": "https://knitlabs.github.io/#projects",
+      "live": null,
       "github": "https://github.com/knitlabs",
       "docs": null
     },
     "featured": true,
-    "icon": "Activity"
+    "icon": "Sparkles"
   },
   {
-    "id": "circuitstory-mobile",
-    "title": "CircuitStory Mobile",
-    "tagline": "Narrative-driven hardware diagnostics and interactive IoT state visualization for modern field engineers.",
-    "status": "Beta",
-    "tags": ["TypeScript", "WebBluetooth", "Canvas Engine", "IoT"],
+    "id": "loomkit",
+    "title": "LoomKit",
+    "tagline": "A lightweight library of tactile UI components and thoughtful interaction primitives that we build and use in our own products.",
+    "status": "In Progress",
+    "tags": ["Open Source", "UI Primitives", "Accessibility", "Design Systems"],
     "links": {
-      "live": "https://knitlabs.github.io/#projects",
+      "live": null,
       "github": "https://github.com/knitlabs",
-      "docs": "https://github.com/knitlabs"
+      "docs": null
     },
     "featured": true,
     "icon": "Terminal"
   },
   {
-    "id": "dataweave-ai",
-    "title": "DataWeave AI",
-    "tagline": "Context-aware telemetry synthesizer turning unstructured event streams into coherent operational threads.",
+    "id": "storycraft",
+    "title": "StoryCraft",
+    "tagline": "An experimental canvas exploring creative technology, interactive timelines, and new ways to communicate human stories on the web.",
     "status": "Lab",
-    "tags": ["Python", "Wasm", "GSAP", "LLM Pipelines"],
+    "tags": ["Creative Lab", "Interactive", "Canvas", "Storytelling"],
     "links": {
       "live": null,
       "github": "https://github.com/knitlabs",
       "docs": null
     },
     "featured": false,
-    "icon": "Sparkles"
-  },
-  {
-    "id": "loomcraft-engine",
-    "title": "LoomCraft Engine",
-    "tagline": "Declarative spatial layout primitives and procedural UI mesh generator for canvas and DOM hybrids.",
-    "status": "Live",
-    "tags": ["Vite", "SVG Geometry", "Motion Primitives"],
-    "links": {
-      "live": "https://knitlabs.github.io/#projects",
-      "github": "https://github.com/knitlabs",
-      "docs": null
-    },
-    "featured": true,
     "icon": "Activity"
   }
 ]
