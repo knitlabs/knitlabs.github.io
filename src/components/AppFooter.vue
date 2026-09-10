@@ -18,9 +18,7 @@
       <!-- Brand & Mission -->
       <div>
         <div class="flex items-center justify-center md:justify-start gap-2.5 mb-2">
-          <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center text-white font-black text-xs">
-            K
-          </div>
+          <KnitLogo class="w-6 h-6 shadow-sm" />
           <span class="font-bold tracking-tight text-white font-mono text-base">KNITLABS</span>
         </div>
         <p class="text-xs text-slate-400 max-w-sm">
@@ -58,6 +56,7 @@
 <script setup>
 import { computed } from 'vue';
 import { Github } from 'lucide-vue-next';
+import KnitLogo from './KnitLogo.vue';
 
 const currentYear = computed(() => new Date().getFullYear());
 </script>
