@@ -15,7 +15,6 @@
       <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
         <a href="#projects" class="hover:text-white transition-colors">Projects</a>
         <a href="#philosophy" class="hover:text-white transition-colors">Philosophy</a>
-        <a href="https://github.com/knitlabs" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">GitHub</a>
       </div>
 
       <!-- Right CTA -->
