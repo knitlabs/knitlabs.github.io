@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #121317;
+  --thread-indigo: #6366f1;
+  --thread-violet: #8b5cf6;
+  --thread-coral: #ff6b4a;
+  --thread-amber: #f59e0b;
+}
+
+html {
+  background-color: #121317;
+  color-scheme: dark;
+}
+
+body {
+  background-color: #121317;
+  color: #f8fafc;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ambient Radial Glows as specified in DESIGN.md */
+.ambient-glow-top {
+  background: radial-gradient(circle at 50% -10%, rgba(99, 102, 241, 0.18) 0%, rgba(18, 19, 23, 0) 70%);
+}
+
+.ambient-glow-mesh {
+  background-image: 
+    radial-gradient(at 10% 20%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+    radial-gradient(at 90% 60%, rgba(255, 107, 74, 0.06) 0px, transparent 50%),
+    radial-gradient(at 50% 90%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+}
+
+/* Frosted glass utilities */
+.glass-panel {
+  background-color: rgba(24, 24, 27, 0.60);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 1rem;
+}
+
+.glass-pill {
+  background-color: rgba(24, 24, 27, 0.70);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* 60fps spring transitions */
+.spring-transition {
+  transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #121317;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.5);
+}
