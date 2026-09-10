@@ -11,7 +11,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "echo 'No lint errors'",
-    "deploy": "gh-pages -d dist -r https://$GH_TOKEN@github.com/knitlabs/knitlabs.github.io.git"
+    "deploy": "gh-pages -d dist -r https://x-access-token:$GH_TOKEN@github.com/knitlabs/knitlabs.github.io.git"
   },
   "dependencies": {
     "gsap": "^3.12.5",
