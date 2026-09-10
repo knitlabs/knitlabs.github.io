@@ -37,7 +37,7 @@
         stroke-linecap="round"
         stroke-linejoin="round"
         filter="url(#threadGlow)"
-        class="opacity-75 transition-opacity"
+        class="opacity-75"
       />
 
       <!-- Primary Crisp Thread Path -->
@@ -81,8 +81,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const viewportWidth = ref(window.innerWidth || 1440);
-const viewportHeight = ref(window.innerHeight || 900);
+const viewportWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1440);
+const viewportHeight = ref(typeof window !== 'undefined' ? window.innerHeight : 900);
 const scrollY = ref(0);
 const pathD = ref('');
 const waypoints = ref([]);
@@ -91,9 +91,8 @@ const threadPathRef = ref(null);
 const glowPathRef = ref(null);
 
 let ctx = null;
-let resizeObserver = null;
-let mutationObserver = null;
 let scrollTicking = false;
+let resizeTimeout = null;
 
 // Synchronize SVG group vertical translation with scroll
 const onScroll = () => {
@@ -108,6 +107,8 @@ const onScroll = () => {
 
 // Calculate bezier curve waypoints based on registered target elements
 const calculateWaypoints = () => {
+  if (typeof window === 'undefined') return;
+
   const currentScrollY = window.scrollY || window.pageYOffset || 0;
   const currentScrollX = window.scrollX || window.pageXOffset || 0;
   
@@ -245,38 +246,34 @@ const refreshThread = () => {
   });
 };
 
+const debouncedResize = () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    refreshThread();
+  }, 100);
+};
+
 onMounted(() => {
   scrollY.value = window.scrollY || window.pageYOffset || 0;
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', refreshThread, { passive: true });
+  window.addEventListener('resize', debouncedResize, { passive: true });
 
-  // Initial calculation after layout settles
+  // Refresh thread after fonts and layout settle
   nextTick(() => {
-    setTimeout(refreshThread, 100);
-    setTimeout(refreshThread, 400);
+    setTimeout(refreshThread, 50);
+    setTimeout(refreshThread, 300);
   });
-
-  // Watch for DOM mutations (e.g. projects appended dynamically)
-  mutationObserver = new MutationObserver(() => {
-    refreshThread();
-  });
-  mutationObserver.observe(document.body, { childList: true, subtree: true });
-
-  // Watch for element resizes
-  if (window.ResizeObserver) {
-    resizeObserver = new ResizeObserver(() => {
-      refreshThread();
-    });
-    resizeObserver.observe(document.body);
+  
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(refreshThread);
   }
 });
 
 onUnmounted(() => {
   // Clean up ScrollTriggers via ctx.revert()
   ctx?.revert();
+  clearTimeout(resizeTimeout);
   window.removeEventListener('scroll', onScroll);
-  window.removeEventListener('resize', refreshThread);
-  mutationObserver?.disconnect();
-  resizeObserver?.disconnect();
+  window.removeEventListener('resize', debouncedResize);
 });
 </script>

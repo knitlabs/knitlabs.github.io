@@ -26,7 +26,6 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn lint
       - run: yarn build
-      - run: echo knitlabs.org > dist/CNAME
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
