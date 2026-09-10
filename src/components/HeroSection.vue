@@ -5,6 +5,7 @@
       <!-- Humble Hero Pill -->
       <div 
         data-thread-target="hero-pill"
+        data-thread-pin="hero-pill"
         class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-zinc-900/80 backdrop-blur-md border border-white/10 text-xs sm:text-sm font-mono text-indigo-300 shadow-glass mb-8 hover:border-indigo-500/40 transition-all duration-300 group cursor-default"
       >
         <span class="flex h-2 w-2 relative">
@@ -47,7 +48,7 @@
         </a>
       </div>
 
-      <!-- Human Core Pillars (Replaced tech demo metrics) -->
+      <!-- Human Core Pillars -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-16 pt-8 border-t border-white/5 w-full max-w-2xl text-left sm:text-center">
         <div class="p-3">
           <div class="text-sm font-semibold text-white mb-1">Curiosity-Led</div>

@@ -86,7 +86,7 @@ const onScroll = () => {
   }
 };
 
-// Calculate bezier curve waypoints based directly on registered [data-thread-pin] eyelet elements
+// Calculate bezier curve waypoints based directly on registered eyelet elements
 const calculateWaypoints = () => {
   if (typeof window === 'undefined') return;
 
@@ -97,35 +97,52 @@ const calculateWaypoints = () => {
   viewportHeight.value = window.innerHeight;
 
   // Pin eyelets embedded directly on cards, sections, and footer
-  const pinElements = Array.from(document.querySelectorAll('[data-thread-pin]'));
+  const pinElements = Array.from(document.querySelectorAll('[data-thread-pin], [data-thread-target="footer-spool"]'));
   if (pinElements.length === 0) return;
 
-  const points = [];
+  const intermediatePoints = [];
+  let footerPoint = null;
 
   // Top origin point above hero
-  points.push({
+  const points = [{
     x: viewportWidth.value * 0.5,
     y: 70
-  });
+  }];
 
   // Calculate pixel-exact centers of every eyelet pin
   pinElements.forEach((pin) => {
     const rect = pin.getBoundingClientRect();
     if (rect.width > 0 && rect.height > 0) {
-      points.push({
+      const isFooter = pin.getAttribute('data-thread-target') === 'footer-spool' || 
+                       pin.getAttribute('data-thread-pin') === 'footer-spool';
+      
+      const pt = {
         x: rect.left + currentScrollX + rect.width / 2,
         y: rect.top + currentScrollY + rect.height / 2
-      });
+      };
+
+      if (isFooter) {
+        footerPoint = pt;
+      } else {
+        intermediatePoints.push(pt);
+      }
     }
   });
 
   // Stable sort: by row vertically, and left-to-right horizontally within each row
-  points.sort((a, b) => {
+  intermediatePoints.sort((a, b) => {
     if (Math.abs(a.y - b.y) < 40) {
       return a.x - b.x;
     }
     return a.y - b.y;
   });
+
+  points.push(...intermediatePoints);
+
+  // Always terminate thread at the footer spool knot
+  if (footerPoint) {
+    points.push(footerPoint);
+  }
 
   waypoints.value = points;
 
@@ -187,21 +204,22 @@ const initScrollScrubber = () => {
         trigger: document.body,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 1
+        scrub: 0.5
       }
     });
 
+    // The thread finishes drawing to the final knot as the footer scrolls into view (~88% of page scroll)
     tl.to(path, {
       strokeDashoffset: 0,
-      ease: 'none',
-      duration: 1
+      ease: 'power1.out',
+      duration: 0.88
     }, 0);
 
     if (glow) {
       tl.to(glow, {
         strokeDashoffset: 0,
-        ease: 'none',
-        duration: 1
+        ease: 'power1.out',
+        duration: 0.88
       }, 0);
     }
   });
@@ -230,7 +248,7 @@ onMounted(() => {
 
   // Refresh thread after fonts and layout settle
   nextTick(() => {
-    setTimeout(refreshThread, 50);
+    setTimeout(refreshThread, 60);
     setTimeout(refreshThread, 300);
   });
   

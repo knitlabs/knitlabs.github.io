@@ -1,10 +1,12 @@
 <template>
   <footer class="relative pt-20 pb-16 px-4 sm:px-6 lg:px-8 border-t border-white/10 z-10 overflow-hidden">
-    <!-- Thread Terminal Spool -->
+    <!-- Thread Terminal Spool (Final Knot) -->
     <div class="flex flex-col items-center justify-center mb-12">
       <div 
         data-thread-target="footer-spool"
-        class="relative flex items-center justify-center w-12 h-12 rounded-full bg-zinc-900 border border-indigo-500/50 shadow-[0_0_20px_rgba(99,102,241,0.5)] group hover:scale-110 transition-transform"
+        data-thread-pin="footer-spool"
+        class="relative flex items-center justify-center w-12 h-12 rounded-full bg-zinc-900 border-2 border-indigo-500 shadow-[0_0_25px_rgba(99,102,241,0.8)] group hover:scale-110 transition-transform z-20"
+        title="Final thread knot"
       >
         <div class="w-4 h-4 rounded-full bg-gradient-to-tr from-indigo-500 via-violet-500 to-amber-400 animate-pulse"></div>
         <div class="absolute inset-0 rounded-full border border-white/20 scale-125 animate-ping opacity-20"></div>
