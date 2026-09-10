@@ -3,7 +3,7 @@
     <nav class="rounded-2xl bg-zinc-900/75 backdrop-blur-md border border-white/10 px-4 sm:px-6 py-3 shadow-glass flex items-center justify-between">
       <!-- Logo -->
       <a href="#" class="flex items-center gap-2.5 group">
-        <KnitLogo class="w-8 h-8 shadow-[0_0_12px_rgba(99,102,241,0.4)] group-hover:scale-105 transition-transform" />
+        <KnitLogo class="w-8 h-8 group-hover:scale-105 transition-transform" />
         <span class="font-extrabold tracking-tight text-white font-mono text-base group-hover:text-indigo-300 transition-colors">
           KNIT<span class="text-indigo-400">LABS</span>
         </span>

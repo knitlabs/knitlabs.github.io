@@ -137,6 +137,12 @@ const calculateWaypoints = () => {
     return a.y - b.y;
   });
 
+  // Align initial top origin smoothly with the first target eyelet (hero)
+  if (intermediatePoints.length > 0) {
+    points[0].x = intermediatePoints[0].x;
+    points[0].y = Math.max(30, intermediatePoints[0].y - 90);
+  }
+
   points.push(...intermediatePoints);
 
   // Always terminate thread at the footer spool knot
@@ -146,33 +152,70 @@ const calculateWaypoints = () => {
 
   waypoints.value = points;
 
-  // Build smooth bezier curves through waypoints
+  // Build continuous, organic yarn spline through waypoints with C1 continuity (no sharp kinks or bends)
   if (points.length < 2) return;
 
+  const n = points.length;
+  // Tension / smoothness factor (0.33 gives natural, fluid yarn drape without overshoot)
+  const smoothness = 0.33;
+
+  // 1. Calculate chord vectors and distances
+  const chordDirs = [];
+  const chordLens = [];
+  for (let i = 0; i < n - 1; i++) {
+    const dx = points[i + 1].x - points[i].x;
+    const dy = points[i + 1].y - points[i].y;
+    const dist = Math.hypot(dx, dy);
+    chordLens.push(dist);
+    if (dist > 0.001) {
+      chordDirs.push({ x: dx / dist, y: dy / dist });
+    } else {
+      chordDirs.push({ x: 0, y: 1 });
+    }
+  }
+
+  // 2. Calculate continuous tangent vector at each waypoint
+  const tangents = [];
+  for (let i = 0; i < n; i++) {
+    if (i === 0) {
+      // Origin: flow along initial downward chord
+      tangents.push(chordDirs[0]);
+    } else if (i === n - 1) {
+      // Terminal: enter final knot smoothly from above
+      tangents.push({ x: 0, y: 1 });
+    } else {
+      // Interior: bisect incoming and outgoing chord directions for seamless C1 curvature
+      const vIn = chordDirs[i - 1];
+      const vOut = chordDirs[i];
+      const tx = vIn.x + vOut.x;
+      const ty = vIn.y + vOut.y;
+      const tLen = Math.hypot(tx, ty);
+      if (tLen > 0.001) {
+        tangents.push({ x: tx / tLen, y: ty / tLen });
+      } else {
+        tangents.push(vOut);
+      }
+    }
+  }
+
+  // 3. Construct smooth cubic Bezier path
   let d = `M ${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`;
 
-  for (let i = 0; i < points.length - 1; i++) {
+  for (let i = 0; i < n - 1; i++) {
     const p0 = points[i];
     const p1 = points[i + 1];
-    const dy = p1.y - p0.y;
-    const dx = p1.x - p0.x;
+    const dist = chordLens[i];
+    const arm = dist * smoothness;
 
-    if (Math.abs(dy) < 50 && Math.abs(dx) > 30) {
-      // Natural horizontal yarn drape between cards in the same row
-      const sag = Math.min(50, Math.abs(dx) * 0.18);
-      const cp1x = p0.x + dx * 0.35;
-      const cp1y = p0.y + sag;
-      const cp2x = p0.x + dx * 0.65;
-      const cp2y = p1.y + sag;
-      d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p1.x.toFixed(1)},${p1.y.toFixed(1)}`;
-    } else {
-      // Natural vertical S-drape curve between sections and vertical cards
-      const cp1x = p0.x;
-      const cp1y = p0.y + Math.max(35, dy * 0.45);
-      const cp2x = p1.x;
-      const cp2y = p1.y - Math.max(35, dy * 0.45);
-      d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p1.x.toFixed(1)},${p1.y.toFixed(1)}`;
-    }
+    const t0 = tangents[i];
+    const t1 = tangents[i + 1];
+
+    const cp1x = p0.x + t0.x * arm;
+    const cp1y = p0.y + t0.y * arm;
+    const cp2x = p1.x - t1.x * arm;
+    const cp2y = p1.y - t1.y * arm;
+
+    d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p1.x.toFixed(1)},${p1.y.toFixed(1)}`;
   }
 
   pathD.value = d;

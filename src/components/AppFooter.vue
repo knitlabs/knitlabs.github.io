@@ -18,7 +18,7 @@
       <!-- Brand & Mission -->
       <div>
         <div class="flex items-center justify-center md:justify-start gap-2.5 mb-2">
-          <KnitLogo class="w-6 h-6 shadow-sm" />
+          <KnitLogo class="w-6 h-6" />
           <span class="font-bold tracking-tight text-white font-mono text-base">KNITLABS</span>
         </div>
         <p class="text-xs text-slate-400 max-w-sm">
