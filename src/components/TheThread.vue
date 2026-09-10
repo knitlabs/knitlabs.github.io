@@ -1,7 +1,7 @@
 <template>
   <svg 
-    class="pointer-events-none fixed inset-0 z-0 w-full h-full"
-    :viewBox="`0 0 ${viewportWidth} ${viewportHeight}`"
+    class="pointer-events-none absolute inset-0 z-0 w-full h-full"
+    :viewBox="`0 0 ${viewportWidth} ${docHeight}`"
     preserveAspectRatio="none"
   >
     <defs>
@@ -25,33 +25,30 @@
       </filter>
     </defs>
 
-    <!-- Moving Group Synced to Viewport Scroll -->
-    <g :transform="`translate(0, ${-scrollY})`">
-      <!-- Glow ambient background path -->
-      <path 
-        ref="glowPathRef"
-        :d="pathD"
-        fill="none"
-        stroke="rgba(99, 102, 241, 0.4)"
-        stroke-width="7"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        filter="url(#threadGlow)"
-        class="opacity-75"
-      />
+    <!-- Glow ambient background path -->
+    <path 
+      ref="glowPathRef"
+      :d="pathD"
+      fill="none"
+      stroke="rgba(99, 102, 241, 0.4)"
+      stroke-width="7"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      filter="url(#threadGlow)"
+      class="opacity-75"
+    />
 
-      <!-- Primary Crisp Thread Path -->
-      <path 
-        ref="threadPathRef"
-        :d="pathD"
-        fill="none"
-        stroke="url(#threadGradient)"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="drop-shadow-[0_0_10px_rgba(99,102,241,0.6)]"
-      />
-    </g>
+    <!-- Primary Crisp Thread Path -->
+    <path 
+      ref="threadPathRef"
+      :d="pathD"
+      fill="none"
+      stroke="url(#threadGradient)"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="drop-shadow-[0_0_10px_rgba(99,102,241,0.6)]"
+    />
   </svg>
 </template>
 
@@ -63,8 +60,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const viewportWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1440);
-const viewportHeight = ref(typeof window !== 'undefined' ? window.innerHeight : 900);
-const scrollY = ref(0);
+const docHeight = ref(typeof window !== 'undefined' ? document.documentElement.scrollHeight : 3000);
 const pathD = ref('');
 const waypoints = ref([]);
 
@@ -72,19 +68,7 @@ const threadPathRef = ref(null);
 const glowPathRef = ref(null);
 
 let ctx = null;
-let scrollTicking = false;
 let resizeTimeout = null;
-
-// Synchronize SVG group vertical translation with scroll
-const onScroll = () => {
-  if (!scrollTicking) {
-    window.requestAnimationFrame(() => {
-      scrollY.value = window.scrollY || window.pageYOffset || 0;
-      scrollTicking = false;
-    });
-    scrollTicking = true;
-  }
-};
 
 // Calculate bezier curve waypoints based directly on registered eyelet elements
 const calculateWaypoints = () => {
@@ -94,22 +78,20 @@ const calculateWaypoints = () => {
   const currentScrollX = window.scrollX || window.pageXOffset || 0;
   
   viewportWidth.value = window.innerWidth;
-  viewportHeight.value = window.innerHeight;
+  docHeight.value = Math.max(
+    document.documentElement.scrollHeight, 
+    document.body.scrollHeight,
+    window.innerHeight
+  );
 
   // Pin eyelets embedded directly on cards, sections, and footer
   const pinElements = Array.from(document.querySelectorAll('[data-thread-pin], [data-thread-target="footer-spool"]'));
   if (pinElements.length === 0) return;
 
-  const intermediatePoints = [];
+  const rawPins = [];
   let footerPoint = null;
 
-  // Top origin point above hero
-  const points = [{
-    x: viewportWidth.value * 0.5,
-    y: 70
-  }];
-
-  // Calculate pixel-exact centers of every eyelet pin
+  // Calculate pixel-exact absolute document centers of every eyelet pin
   pinElements.forEach((pin) => {
     const rect = pin.getBoundingClientRect();
     if (rect.width > 0 && rect.height > 0) {
@@ -124,40 +106,64 @@ const calculateWaypoints = () => {
       if (isFooter) {
         footerPoint = pt;
       } else {
-        intermediatePoints.push(pt);
+        rawPins.push(pt);
       }
     }
   });
 
-  // Stable sort: by row vertically, and left-to-right horizontally within each row
-  intermediatePoints.sort((a, b) => {
-    if (Math.abs(a.y - b.y) < 40) {
-      return a.x - b.x;
-    }
-    return a.y - b.y;
-  });
+  // Group intermediate pins into rows (pins within 60px vertically belong to the same row)
+  rawPins.sort((a, b) => a.y - b.y);
+  const rowBuckets = [];
 
-  // Align initial top origin smoothly with the first target eyelet (hero)
-  if (intermediatePoints.length > 0) {
-    points[0].x = intermediatePoints[0].x;
-    points[0].y = Math.max(30, intermediatePoints[0].y - 90);
+  for (const pt of rawPins) {
+    const existingRow = rowBuckets.find(row => Math.abs(row[0].y - pt.y) < 60);
+    if (existingRow) {
+      existingRow.push(pt);
+    } else {
+      rowBuckets.push([pt]);
+    }
   }
 
-  points.push(...intermediatePoints);
+  // Sort rows vertically top-to-bottom
+  rowBuckets.sort((a, b) => a[0].y - b[0].y);
 
-  // Always terminate thread at the footer spool knot
+  // Natural serpentine weave (boustrophedon):
+  // Even rows traverse left-to-right, odd rows traverse right-to-left.
+  // This turns gracefully at the edge instead of cutting diagonally across the screen.
+  const orderedIntermediate = [];
+  rowBuckets.forEach((row, rowIndex) => {
+    if (rowIndex % 2 === 0) {
+      row.sort((a, b) => a.x - b.x);
+    } else {
+      row.sort((a, b) => b.x - a.x);
+    }
+    orderedIntermediate.push(...row);
+  });
+
+  if (orderedIntermediate.length === 0) return;
+
+  // Top origin point gracefully aligned above the first eyelet
+  const firstPt = orderedIntermediate[0];
+  const points = [
+    {
+      x: firstPt.x,
+      y: Math.max(30, firstPt.y - 90)
+    },
+    ...orderedIntermediate
+  ];
+
+  // Terminate thread at the footer spool knot
   if (footerPoint) {
     points.push(footerPoint);
   }
 
   waypoints.value = points;
 
-  // Build continuous, organic yarn spline through waypoints with C1 continuity (no sharp kinks or bends)
-  if (points.length < 2) return;
-
+  // Build continuous, organic yarn spline through waypoints with C1 continuity (zero sharp kinks or bends)
   const n = points.length;
-  // Tension / smoothness factor (0.33 gives natural, fluid yarn drape without overshoot)
-  const smoothness = 0.33;
+  if (n < 2) return;
+
+  const smoothness = 0.32; // Organic yarn drape tension factor
 
   // 1. Calculate chord vectors and distances
   const chordDirs = [];
@@ -178,13 +184,13 @@ const calculateWaypoints = () => {
   const tangents = [];
   for (let i = 0; i < n; i++) {
     if (i === 0) {
-      // Origin: flow along initial downward chord
+      // Flow along initial downward chord
       tangents.push(chordDirs[0]);
     } else if (i === n - 1) {
-      // Terminal: enter final knot smoothly from above
+      // Enter final knot smoothly from above
       tangents.push({ x: 0, y: 1 });
     } else {
-      // Interior: bisect incoming and outgoing chord directions for seamless C1 curvature
+      // Bisect incoming and outgoing chords for seamless, continuous curvature
       const vIn = chordDirs[i - 1];
       const vOut = chordDirs[i];
       const tx = vIn.x + vOut.x;
@@ -200,6 +206,8 @@ const calculateWaypoints = () => {
 
   // 3. Construct smooth cubic Bezier path
   let d = `M ${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`;
+  const margin = 24;
+  const maxW = viewportWidth.value - margin;
 
   for (let i = 0; i < n - 1; i++) {
     const p0 = points[i];
@@ -210,10 +218,14 @@ const calculateWaypoints = () => {
     const t0 = tangents[i];
     const t1 = tangents[i + 1];
 
-    const cp1x = p0.x + t0.x * arm;
-    const cp1y = p0.y + t0.y * arm;
-    const cp2x = p1.x - t1.x * arm;
-    const cp2y = p1.y - t1.y * arm;
+    let cp1x = p0.x + t0.x * arm;
+    let cp1y = p0.y + t0.y * arm;
+    let cp2x = p1.x - t1.x * arm;
+    let cp2y = p1.y - t1.y * arm;
+
+    // Clamp control point X coordinates to stay within visible page margins
+    cp1x = Math.max(margin, Math.min(maxW, cp1x));
+    cp2x = Math.max(margin, Math.min(maxW, cp2x));
 
     d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p1.x.toFixed(1)},${p1.y.toFixed(1)}`;
   }
@@ -247,22 +259,21 @@ const initScrollScrubber = () => {
         trigger: document.body,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 0.5
+        scrub: true // Lock synchronously to scroll position: zero lag, zero phantom drift
       }
     });
 
-    // The thread finishes drawing to the final knot as the footer scrolls into view (~88% of page scroll)
     tl.to(path, {
       strokeDashoffset: 0,
-      ease: 'power1.out',
-      duration: 0.88
+      ease: 'none',
+      duration: 1
     }, 0);
 
     if (glow) {
       tl.to(glow, {
         strokeDashoffset: 0,
-        ease: 'power1.out',
-        duration: 0.88
+        ease: 'none',
+        duration: 1
       }, 0);
     }
   });
@@ -285,8 +296,6 @@ const debouncedResize = () => {
 };
 
 onMounted(() => {
-  scrollY.value = window.scrollY || window.pageYOffset || 0;
-  window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', debouncedResize, { passive: true });
 
   // Refresh thread after fonts and layout settle
@@ -303,7 +312,6 @@ onMounted(() => {
 onUnmounted(() => {
   ctx?.revert();
   clearTimeout(resizeTimeout);
-  window.removeEventListener('scroll', onScroll);
   window.removeEventListener('resize', debouncedResize);
 });
 </script>
