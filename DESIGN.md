@@ -63,6 +63,89 @@ The KnitLabs mark is a minimalist, monoline vector monogram featuring two interw
 > [!TIP]
 > Always declare `gradientUnits="userSpaceOnUse"` when targeting diagonal or monoline SVG paths so browsers render gradients consistently without bounding-box calculation artifacts.
 
+### 2.4 Product Logo Guidelines (Sub-Brands, Tools & Experiments)
+
+Every product built under the KnitLabs collective (e.g. **Threadflow**, **LoomKit**, **StoryCraft**) carries its own distinct functional motif while sharing the core visual genetics of the parent KnitLabs mark. When creating or updating a product logo, follow these requirements:
+
+#### 1. The Knit DNA: Core Principles
+- **Monoline Vector Purity**: Marks must be built from clean, open or intersecting vector strokes (`<path>`, `<line>`, `<circle>`). Avoid filled 2D silhouettes, heavy solid masses, 3D skeuomorphism, or photographic raster effects.
+- **Tactile Weave Metaphor**: Every product logo must visually translate the tactile idea of yarn, thread tension, loops, knots, or warp/weft structure into a symbol for the product's function:
+  - *Interlocking Loops & Narrative Fibers*: For workspaces, note-taking apps, and thought tools (e.g., continuous loops weaving through each other).
+  - *Warp & Weft Coordinates*: For UI component libraries, developer tools, and design systems (e.g., perpendicular thread intersections and tactile grids).
+  - *Fluid Ribbons & Dynamic Curves*: For creative canvases, media tools, and storytelling experiments (e.g., expressive bezier sweeps or loose knots).
+- **Frameless & 100% Transparent**:
+  - The raw SVG mark is **completely frameless**. Do not include a background `<rect>`, container tile, squircle, or outer border in the canonical SVG file.
+  - The mark must be able to sit directly on the dark obsidian canvas (`#121317`), frosted glass cards, transparent navbars, or light README documentation without clipping or harsh edges.
+  - If an operating system or store requires a framed icon (e.g., macOS dock tile, iOS app icon, Chrome Web Store), that container belongs in the distribution packaging pipeline, never inside the raw vector logo.
+  - Never bake drop-shadows or blur filters into the SVG source; shadow and glow are handled at runtime via CSS (`drop-shadow(...)`) to preserve crisp vector scaling.
+- **Geometrically Balanced on a 1:1 Canvas**:
+  - Author all product marks on a square `viewBox="0 0 40 40"` (or proportional `1:1` grid).
+  - **Optical Centering**: The visual center of gravity must align with canvas center `(20, 20)`. If one stroke has an expressive tail or diagonal flare, adjust the coordinates so the mark feels balanced when paired with text or rendered in a round/square avatar.
+  - **Safe Margin**: Maintain an interior safe margin of at least `4px–5px` from the viewBox edges (keep path vertices within `x, y ∈ [4, 36]`). This ensures round stroke-caps and anti-aliasing pixels never get cut off at high zoom or downscaled favicon sizes.
+- **Consistent Stroke Weight & Round Caps**:
+  - Standardize stroke weight to `3.5px` (matching the parent KnitLabs mark on a `40x40` grid; range `3.0px`–`3.8px` depending on visual density).
+  - Enforce `stroke-linecap="round"` and `stroke-linejoin="round"` across all strokes. Terminals must feel like soft, natural yarn threads rather than sharp mechanical edges.
+- **Color Harmony & Thread Pairing**:
+  - Anchor the mark in the KnitLabs thread color system:
+    - Primary Thread Gradient: Indigo (`#6366f1`) → Violet (`#8b5cf6`)
+    - Warm Accent Threads: Ember Coral (`#ff6b4a`), Amber Glow (`#f59e0b`)
+    - Semantic / Product Accents: Emerald (`#34d399`) for live systems; Sky (`#38bdf8`) for connected data tools; Rose (`#fb7185`) for experimental canvas tools.
+  - A product mark should pair **two contrasting thread paths** (e.g., an Indigo/Violet warp thread intersecting an Ember Coral or Amber weft thread), creating clear depth and visual interest through overlapping.
+  - Always declare `gradientUnits="userSpaceOnUse"` on any `<linearGradient>` with explicit start/end coordinates.
+- **Multi-Resolution & The 16px Favicon Test**:
+  - The mark must remain unmistakable and crisp across all deployment scales:
+    - `16x16` / `32x32`: Browser tab favicon and desktop taskbar.
+    - `24x24` / `32x32`: Product cards, breadcrumb navbars, and sidebar headers.
+    - `48x48` / `64x64`: Product landing pages, feature grids, and dialog headers.
+    - `128x128`+: README hero headers and splash screens.
+  - Always preview the mark at 16px. If lines blur together, simplify the paths or increase spacing between adjacent strokes. Limit the mark to 2–3 expressive paths.
+- **Clean SVG Source Code**:
+  - Semantic, human-readable SVG markup with clean integer or 1-decimal coordinates.
+  - No `<g id="Layer_1">` wrapper bloat, no inline styles conflicting with CSS, and zero vector-editor metadata (Inkscape, Illustrator, Figma export noise).
+
+#### 2. Sub-Brand Product Logo Blueprint (Example)
+
+Here is a reference implementation for a KnitLabs sub-brand product mark (e.g. *Threadflow* or *LoomKit*), demonstrating monoline paths, tactile overlap, and frameless transparency:
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <defs>
+    <linearGradient id="product-thread" x1="10" y1="12" x2="30" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+  </defs>
+  <!-- Primary Continuous Thread (Indigo -> Violet) -->
+  <path 
+    d="M 10 20 C 10 13 18 13 20 20 C 22 27 30 27 30 20 C 30 13 22 13 20 20" 
+    stroke="url(#product-thread)" 
+    stroke-width="3.5" 
+    stroke-linecap="round" 
+  />
+  <!-- Crossing Weft Accent (Ember Coral) -->
+  <path 
+    d="M 14 28 C 18 24 22 16 26 12" 
+    stroke="#ff6b4a" 
+    stroke-width="3.5" 
+    stroke-linecap="round" 
+  />
+</svg>
+```
+
+#### 3. Product Logo Review Checklist
+
+Before finalizing any product logo mark, verify that it passes every check:
+
+- [ ] **Monoline**: Composed purely of strokes (`fill="none"`, uniform `3.5px` weight on `40x40` grid).
+- [ ] **Round Terminals**: `stroke-linecap="round"` and `stroke-linejoin="round"` applied to all paths.
+- [ ] **Frameless**: 100% transparent root with no background `<rect>`, container tile, or border.
+- [ ] **Square & Centered**: 1:1 aspect ratio (`viewBox="0 0 40 40"`), optically centered with $\ge 4\text{px}$ safe padding.
+- [ ] **Tactile Thread DNA**: Conveys yarn, weaving, loops, or physical connection.
+- [ ] **Color Harmony**: Uses KnitLabs palette tokens (Indigo/Violet + signature warm or domain accent).
+- [ ] **UserSpace Gradients**: All `<linearGradient>` tags specify `gradientUnits="userSpaceOnUse"`.
+- [ ] **Favicon Tested**: Remains legible and recognizable when rendered at 16px in a browser tab.
+- [ ] **Zero Artifacts**: No editor metadata, no baked drop shadows, clean human-readable SVG markup.
+
 ---
 
 ## 3. Color Tokens
@@ -108,27 +191,107 @@ GitHub automatically renders live color swatches next to hex codes formatted in 
 
 ---
 
-## 4. Typography
+## 4. Typography System
 
-KnitLabs products pair a legible sans-serif for UI and content with a precision monospace face for code, metrics, and technical labels.
+Typography across KnitLabs products establishes clarity, technical precision, and calm editorial authority. We pair a high-legibility sans-serif for interface flows and prose with a geometric monospace for code, metrics, and metadata.
 
-| Role | Font Family | Recommended Weights |
-| :--- | :--- | :--- |
-| **Interface & Editorial** | `Inter`, `Google Sans Flex`, system-ui, sans-serif | `400` (Regular), `500` (Medium), `600` (SemiBold), `700` (Bold) |
-| **Code & Technical Labels** | `JetBrains Mono`, `Fira Code`, monospace | `400` (Regular), `500` (Medium) |
+### 4.1 Typeface Roles & Font Stacks
 
-### Typographic Scale
+| Role | Preferred Typefaces | System Fallback Stack | Recommended Weights |
+| :--- | :--- | :--- | :--- |
+| **Interface, Headings & Editorial** | `Inter`, `Google Sans Flex` | `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif` | `400` (Regular), `500` (Medium), `600` (SemiBold), `700` (Bold) |
+| **Code, Metrics & Technical Data** | `JetBrains Mono`, `Fira Code` | `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace` | `400` (Regular), `500` (Medium), `700` (Bold) |
 
-| Token | Size | Line Height | Tracking | Typical Usage |
-| :--- | :--- | :--- | :--- | :--- |
-| `text-xs` | `0.75rem` (12px) | `1rem` (16px) | `+0.05em` | Status tags, mono labels, timestamps |
-| `text-sm` | `0.875rem` (14px) | `1.25rem` (20px) | `normal` | Subtitle copy, metadata, secondary links |
-| `text-base` | `1rem` (16px) | `1.5rem` (24px) | `normal` | Default body text |
-| `text-lg` | `1.125rem` (18px) | `1.75rem` (28px) | `-0.01em` | Lead paragraphs, card titles |
-| `text-xl` | `1.25rem` (20px) | `1.75rem` (28px) | `-0.02em` | Section subheadings |
-| `text-2xl` | `1.5rem` (24px) | `2rem` (32px) | `-0.025em` | Modal titles, feature headings |
-| `text-3xl` | `1.875rem` (30px) | `2.25rem` (36px) | `-0.03em` | Major section headers |
-| `text-4xl` | `2.25rem` (36px) | `2.5rem` (40px) | `-0.035em` | Product hero displays |
+#### Role Application Guidelines
+- **Sans-Serif**: Used for all human-facing narratives, page titles, navigation bars, button labels, descriptions, and forms. It remains neutral, warm, and transparent, letting content lead.
+- **Monospace**: Used for technical provenance: git commit SHAs, terminal commands, data tags, status indicators, code snippets, timestamps, and product category metadata.
+
+---
+
+### 4.2 Typographic Scale & Hierarchy
+
+| Token | Size | Line Height (Leading) | Tracking | Weight | Typical Usage |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `text-xs` | `0.75rem` (12px) | `1rem` (16px) | `+0.05em` | `500` | Status tags, mono labels, timestamps, metadata |
+| `text-sm` | `0.875rem` (14px) | `1.25rem` (20px) | `normal` | `400` / `500` | Secondary copy, form inputs, tooltips, card descriptions |
+| `text-base` | `1rem` (16px) | `1.5rem` (24px) | `normal` | `400` / `500` | Default body copy, interactive buttons, list items |
+| `text-lg` | `1.125rem` (18px) | `1.75rem` (28px) | `-0.01em` | `500` / `600` | Lead paragraphs, card titles, navigation brand marks |
+| `text-xl` | `1.25rem` (20px) | `1.75rem` (28px) | `-0.02em` | `600` | Section subheadings, modal titles, featured callouts |
+| `text-2xl` | `1.5rem` (24px) | `2rem` (32px) | `-0.025em` | `600` / `700` | Component headers, drawer titles |
+| `text-3xl` | `1.875rem` (30px) | `2.25rem` (36px) | `-0.03em` | `700` | Major section headers, page titles |
+| `text-4xl` | `2.25rem` (36px) | `2.5rem` (40px) | `-0.035em` | `700` / `800` | Hero headlines, primary landing statements |
+| `text-5xl` | `3rem` (48px) | `1.15` (55px) | `-0.04em` | `800` | High-impact product hero statements |
+
+---
+
+### 4.3 Optical Tracking (Letter-Spacing) & Leading Rules
+
+1. **Negative Tracking on Large Headings (`text-2xl` to `text-5xl`)**
+   - Larger font sizes naturally appear to space out optically. Apply negative letter-spacing (`-0.02em` to `-0.035em`, Tailwind `tracking-tight` / `tracking-tighter`) to all titles.
+   - This tightens character relationships, imparting visual authority, solidity, and editorial craft.
+2. **Neutral Tracking on Body Prose (`text-sm` and `text-base`)**
+   - Body copy must always remain at neutral tracking (`0` / `tracking-normal`). Never apply negative letter spacing to long-form body text, as it increases eye friction and reduces reading stamina.
+3. **Positive Tracking on Micro-Typography & Monospace (`text-xs`, `text-[11px]`)**
+   - Uppercase badges, category labels, timestamps, and monospaced snippets require open letter-spacing (`+0.05em` to `+0.1em`, Tailwind `tracking-wider` / `tracking-widest`).
+   - Monospaced glyphs and capital letters crowd together at small sizes; open tracking provides breathing room and sharp legibility.
+4. **Dark-Canvas Leading (Line-Height)**
+   - Text rendered on dark backgrounds (`#121317`) naturally radiates a faint optical glow (halation).
+   - Maintain generous line-heights for body text (`1.5` to `1.65`, `leading-relaxed`) to prevent adjacent lines from visually running together.
+   - Keep display headings at tight leading (`1.1` to `1.2`) to avoid loose whitespace gaps across multi-line titles.
+
+---
+
+### 4.4 Product Wordmarks & Brand Lockups
+
+When pairing a product logo mark with typography (in navbars, card headers, splash screens, or README banners), adhere to these lockup standards:
+
+#### 1. The Collective Breadcrumb Lockup (Ecosystem Context)
+When presenting a product within the KnitLabs collective, use the hierarchical breadcrumb structure:
+
+```
+[Icon Mark]  KNITLABS / Product Name  [Status Pill]
+```
+
+- **Parent Prefix (`KNITLABS`)**: Set in `--kl-text-muted` (`#94a3b8`) or `--kl-text-secondary` (`#cbd5e1`), font-mono or font-sans medium, with uppercase styling.
+- **Divider (`/` or `//`)**: Set in `--kl-text-subtle` (`#64748b`) with horizontal padding.
+- **Product Name**: Set in `--kl-text-primary` (`#f8fafc`), font-sans SemiBold (`600`) or Bold (`700`) with `-0.02em` tracking.
+
+#### 2. Standalone Product Wordmark
+- **UI & Web Applications**: Set the product name in `Inter` SemiBold (`600`) or Bold (`700`) in sentence/title case (e.g., **Threadflow**, **StoryCraft**), tracking `-0.02em`.
+- **Developer Libraries & CLI Tools**: May optionally use uppercase monospace bold (e.g., `LOOMKIT`, `KNIT`) with `-0.01em` tracking to emphasize terminal and toolchain roots.
+
+#### 3. Mark-to-Text Proportions & Optical Alignment
+- **Size Proportion**: The icon mark height should measure **1.2x to 1.4x** the font cap-height:
+  - *Compact Navbar*: `24px` icon mark paired with `16px–18px` wordmark text.
+  - *Standard Card / Dialog*: `32px` icon mark paired with `20px–22px` wordmark text.
+  - *Hero / Landing Splash*: `48px`–`56px` icon mark paired with `32px–36px` wordmark text.
+- **Optical Baseline Alignment**: Always center the icon mark vertically on the **cap-height center** of the adjacent wordmark, not on the baseline or bounding-box extrema.
+- **Spacing Gap**: Maintain a horizontal gap of `10px` to `14px` (`gap-2.5` to `gap-3.5`) between mark and wordmark.
+
+---
+
+### 4.5 Micro-Typography & Tabular Numerics
+
+- **Tabular Numbers for Data**: Always enable `font-variant-numeric: tabular-nums` (Tailwind `tabular-nums`) for counters, countdowns, timestamps, benchmark metrics, and data tables. Tabular numerals have equal widths, preventing horizontal layout shifting when numbers increment.
+- **Status Pills & Tags**:
+  ```html
+  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium tracking-wide uppercase border bg-indigo-500/10 border-indigo-500/30 text-indigo-300">
+    <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+    In Progress
+  </span>
+  ```
+
+---
+
+### 4.6 Reading Ergonomics, Measure & Contrast Accessibility
+
+- **Optimal Line Measure**: Constrain reading copy to **65–75 characters per line** (`max-w-prose` or `max-w-2xl`). Lines longer than 80 characters cause eye tracking fatigue on widescreen monitors.
+- **WCAG Contrast on Obsidian Canvas (`#121317`)**:
+  - `Primary Text` (`#f8fafc`): **17.5:1** contrast ratio (exceeds WCAG AAA).
+  - `Secondary Text` (`#cbd5e1`): **12.3:1** contrast ratio (exceeds WCAG AAA).
+  - `Muted Text` (`#94a3b8`): **6.8:1** contrast ratio (exceeds WCAG AA for normal text, AAA for large).
+  - `Subtle / Disabled` (`#64748b`): **3.5:1** contrast ratio (strictly reserved for timestamps, disabled chrome, and non-essential decoration).
+- **Subpixel Anti-Aliasing**: Apply `-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;` (Tailwind `antialiased`) globally to prevent letterforms from artificially bloating or blurring against dark obsidian surfaces.
 
 ---
 
